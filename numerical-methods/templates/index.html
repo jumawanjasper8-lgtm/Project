@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Numerical Methods Calculator{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Interactive · Step-by-Step · Educational</div>
+    <h1 class="hero-title">
+      Numerical<br>
+      <span class="hero-accent">Methods</span><br>
+      Calculator
+    </h1>
+    <p class="hero-subtitle">
+      Explore root-finding algorithms with detailed mathematical discussion,
+      fully worked examples, and interactive calculators.
+    </p>
+    <div class="hero-cards">
+      <a href="/bisection" class="method-card">
+        <div class="method-card-num">01</div>
+        <div class="method-card-body">
+          <h2>Bisection Method</h2>
+          <p>A simple bracketing method that halves the interval at each step. Guaranteed to converge for continuous functions.</p>
+          <div class="method-tag">Bracketing</div>
+          <div class="method-formula">$$c = \frac{a+b}{2}$$</div>
+        </div>
+        <div class="method-card-arrow">→</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

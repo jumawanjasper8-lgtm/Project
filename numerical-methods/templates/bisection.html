@@ -1,0 +1,746 @@
+{% extends "base.html" %}
+{% block title %}Bisection Method{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="breadcrumb"><a href="/">Home</a> / Bisection Method</div>
+    <h1>Bisection Method</h1>
+    <p class="page-subtitle">A robust bracketing algorithm for finding roots of continuous functions.</p>
+  </div>
+</div>
+
+<!-- THEORY SECTION -->
+<section class="content-section">
+  <div class="section-inner">
+    <div class="section-tag">Theory</div>
+    <h2>Mathematical Discussion</h2>
+    <div class="theory-body">
+      <p>
+        The <strong>Bisection Method</strong> is one of the simplest and most reliable root-finding algorithms
+        in numerical analysis. It is based on the <em>Intermediate Value Theorem</em>, which states:
+      </p>
+      <div class="theorem-box">
+        <strong>Intermediate Value Theorem:</strong> If $f$ is continuous on $[a, b]$ and $f(a) \cdot f(b) &lt; 0$,
+        then there exists at least one root $c \in (a, b)$ such that $f(c) = 0$.
+      </div>
+
+      <h3>Algorithm</h3>
+      <ol class="algo-steps">
+        <li>Choose $a$ and $b$ such that $f(a) \cdot f(b) &lt; 0$.</li>
+        <li>Compute the midpoint: $c = \dfrac{a + b}{2}$</li>
+        <li>If $f(c) = 0$ or $\dfrac{b - a}{2} &lt; \varepsilon$, then $c$ is the root. Stop.</li>
+        <li>If $f(a) \cdot f(c) &lt; 0$, the root lies in $[a, c]$: set $b = c$.</li>
+        <li>Otherwise, the root lies in $[c, b]$: set $a = c$.</li>
+        <li>Return to Step 2.</li>
+      </ol>
+
+      <h3>Error Analysis</h3>
+      <p>After $n$ iterations, the maximum possible error is:</p>
+      $$E_n = \frac{b - a}{2^n}$$
+      <p>
+        The number of iterations needed to achieve a tolerance $\varepsilon$ is:
+      </p>
+      $$n \geq \left\lceil \log_2\!\left(\frac{b - a}{\varepsilon}\right) \right\rceil$$
+
+      <h3>Convergence</h3>
+      <p>
+        The bisection method converges <strong>linearly</strong> with a convergence rate of $\frac{1}{2}$
+        per iteration. While slower than Newton-Raphson or secant methods, it is <em>guaranteed to converge</em>
+        as long as the initial bracket $[a, b]$ contains a root and $f$ is continuous.
+      </p>
+
+      <h3>Advantages &amp; Limitations</h3>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>✓ Advantages</h4>
+          <ul>
+            <li>Always converges (given a valid bracket)</li>
+            <li>Simple to implement and understand</li>
+            <li>Does not require derivatives</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>✗ Limitations</h4>
+          <ul>
+            <li>Requires a bracketing interval $[a, b]$</li>
+            <li>Slow linear convergence</li>
+            <li>Finds only one root per bracket</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKED EXAMPLES -->
+<section class="content-section alt-bg">
+  <div class="section-inner">
+    <div class="section-tag">Examples</div>
+    <h2>Worked Examples</h2>
+
+    <!-- Example 1 -->
+    <div class="example-block">
+  <div class="example-header">
+    <span class="example-num">Example 1</span>
+    <span class="example-title">
+      Find a root of \(f(x)=x^3-x-2\) on \([1,2]\)
+    </span>
+  </div>
+
+  <div class="example-body">
+
+    <p><strong>Step 0: Verify the bracket</strong></p>
+
+    <p>\(f(1)=1-1-2=-2<0\)</p>
+    <p>\(f(2)=8-2-2=4>0\)</p>
+
+    <p>
+      Since \(f(1)\cdot f(2)=(-2)(4)=-8<0\),
+      a root exists in \([1,2]\). ✓
+    </p>
+
+    <!-- SLIDABLE TABLE -->
+    <div class="iter-table-wrap">
+
+      <table class="iter-table">
+
+        <thead>
+          <tr>
+            <th>n</th>
+            <th>a</th>
+            <th>b</th>
+            <th>c=(a+b)/2</th>
+            <th>f(c)</th>
+            <th>New Interval</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr>
+            <td>1</td>
+            <td>1.000000</td>
+            <td>2.000000</td>
+            <td>1.500000</td>
+            <td>-0.125000</td>
+            <td>[1.5 , 2]</td>
+          </tr>
+
+          <tr>
+            <td>2</td>
+            <td>1.500000</td>
+            <td>2.000000</td>
+            <td>1.750000</td>
+            <td>1.609375</td>
+            <td>[1.5 , 1.75]</td>
+          </tr>
+
+          <tr>
+            <td>3</td>
+            <td>1.500000</td>
+            <td>1.750000</td>
+            <td>1.625000</td>
+            <td>0.666016</td>
+            <td>[1.5 , 1.625]</td>
+          </tr>
+
+          <tr>
+            <td>4</td>
+            <td>1.500000</td>
+            <td>1.625000</td>
+            <td>1.562500</td>
+            <td>0.252197</td>
+            <td>[1.5 , 1.5625]</td>
+          </tr>
+
+          <tr>
+            <td>5</td>
+            <td>1.500000</td>
+            <td>1.562500</td>
+            <td>1.531250</td>
+            <td>0.059326</td>
+            <td>[1.5 , 1.53125]</td>
+          </tr>
+
+          <tr>
+            <td>6</td>
+            <td>1.500000</td>
+            <td>1.531250</td>
+            <td>1.515625</td>
+            <td>-0.034054</td>
+            <td>[1.515625 , 1.53125]</td>
+          </tr>
+
+          <tr>
+            <td>7</td>
+            <td>1.515625</td>
+            <td>1.531250</td>
+            <td>1.523438</td>
+            <td>0.012250</td>
+            <td>[1.515625 , 1.523438]</td>
+          </tr>
+
+          <tr>
+            <td>8</td>
+            <td>1.515625</td>
+            <td>1.523438</td>
+            <td>1.519531</td>
+            <td>-0.010971</td>
+            <td>[1.519531 , 1.523438]</td>
+          </tr>
+
+          <tr>
+            <td>9</td>
+            <td>1.519531</td>
+            <td>1.523438</td>
+            <td>1.521484</td>
+            <td>0.000622</td>
+            <td>[1.519531 , 1.521484]</td>
+          </tr>
+
+          <tr>
+            <td>10</td>
+            <td>1.519531</td>
+            <td>1.521484</td>
+            <td>1.520508</td>
+            <td>-0.005179</td>
+            <td>[1.520508 , 1.521484]</td>
+          </tr>
+
+          <tr>
+            <td>11</td>
+            <td>1.520508</td>
+            <td>1.521484</td>
+            <td>1.520996</td>
+            <td>-0.002279</td>
+            <td>[1.520996 , 1.521484]</td>
+          </tr>
+
+          <tr>
+            <td>12</td>
+            <td>1.520996</td>
+            <td>1.521484</td>
+            <td>1.521240</td>
+            <td>-0.000829</td>
+            <td>[1.521240 , 1.521484]</td>
+          </tr>
+
+          <tr>
+            <td>13</td>
+            <td>1.521240</td>
+            <td>1.521484</td>
+            <td>1.521362</td>
+            <td>-0.000103</td>
+            <td>[1.521362 , 1.521484]</td>
+          </tr>
+
+          <tr>
+            <td>14</td>
+            <td>1.521362</td>
+            <td>1.521484</td>
+            <td>1.521423</td>
+            <td>0.000259</td>
+            <td>[1.521362 , 1.521423]</td>
+          </tr>
+
+          <tr>
+            <td>15</td>
+            <td>1.521362</td>
+            <td>1.521423</td>
+            <td>1.521393</td>
+            <td>0.000078</td>
+            <td>[1.521362 , 1.521393]</td>
+          </tr>
+
+          <tr>
+            <td>16</td>
+            <td>1.521362</td>
+            <td>1.521393</td>
+            <td>1.521378</td>
+            <td>-0.000013</td>
+            <td>[1.521378 , 1.521393]</td>
+          </tr>
+
+          <tr>
+            <td>17</td>
+            <td>1.521378</td>
+            <td>1.521393</td>
+            <td>1.521385</td>
+            <td>0.000033</td>
+            <td>[1.521378 , 1.521385]</td>
+          </tr>
+
+          <tr>
+            <td>18</td>
+            <td>1.521378</td>
+            <td>1.521385</td>
+            <td>1.521381</td>
+            <td>0.000010</td>
+            <td>[1.521378 , 1.521381]</td>
+          </tr>
+
+          <tr>
+            <td>19</td>
+            <td>1.521378</td>
+            <td>1.521381</td>
+            <td>1.521379</td>
+            <td>-0.000001</td>
+            <td>[1.521379 , 1.521381]</td>
+          </tr>
+
+          <tr class="highlight-row">
+            <td>20</td>
+            <td>1.521379</td>
+            <td>1.521381</td>
+            <td>1.521380</td>
+            <td>0.000000</td>
+            <td>Converged ✓</td>
+          </tr>
+
+        </tbody>
+
+      </table>
+    </div>
+
+    <div class="example-result">
+      <strong>Result:</strong>
+      After 20 iterations,
+      the root converges to
+
+      <br><br>
+
+      \[
+      x \approx 1.5213797
+      \]
+
+      with error \(<10^{-6}\).
+    </div>
+
+    <p>
+      <strong>Verification:</strong>
+
+      \[
+      f(1.5213797)
+      =
+      (1.5213797)^3 - 1.5213797 -2
+      \approx 0
+      \]
+
+      ✓
+    </p>
+
+  </div>
+</div>
+
+    <!-- Example 2 -->
+    <div class="example-block">
+
+  <div class="example-header">
+    <span class="example-num">Example 2</span>
+
+    <span class="example-title">
+      Find a root of \(f(x)=\cos(x)-x\) on \([0,1]\)
+    </span>
+  </div>
+
+  <div class="example-body">
+
+    <p><strong>Step 0: Verify the bracket</strong></p>
+
+    <p>
+      \(f(0)=\cos(0)-0=1>0\)
+    </p>
+
+    <p>
+      \(f(1)=\cos(1)-1\approx -0.4597<0\)
+    </p>
+
+    <p>
+      Since \(f(0)\cdot f(1)<0\),
+      a root exists in \([0,1]\). ✓
+    </p>
+
+    <!-- SCROLLABLE TABLE -->
+    <div class="iter-table-wrap">
+
+      <table class="iter-table">
+
+        <thead>
+          <tr>
+            <th>n</th>
+            <th>a</th>
+            <th>b</th>
+            <th>c=(a+b)/2</th>
+            <th>f(c)</th>
+            <th>New Interval</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr>
+            <td>1</td>
+            <td>0.000000</td>
+            <td>1.000000</td>
+            <td>0.500000</td>
+            <td>0.377583</td>
+            <td>[0.5 , 1]</td>
+          </tr>
+
+          <tr>
+            <td>2</td>
+            <td>0.500000</td>
+            <td>1.000000</td>
+            <td>0.750000</td>
+            <td>-0.018311</td>
+            <td>[0.5 , 0.75]</td>
+          </tr>
+
+          <tr>
+            <td>3</td>
+            <td>0.500000</td>
+            <td>0.750000</td>
+            <td>0.625000</td>
+            <td>0.185963</td>
+            <td>[0.625 , 0.75]</td>
+          </tr>
+
+          <tr>
+            <td>4</td>
+            <td>0.625000</td>
+            <td>0.750000</td>
+            <td>0.687500</td>
+            <td>0.085335</td>
+            <td>[0.6875 , 0.75]</td>
+          </tr>
+
+          <tr>
+            <td>5</td>
+            <td>0.687500</td>
+            <td>0.750000</td>
+            <td>0.718750</td>
+            <td>0.033879</td>
+            <td>[0.71875 , 0.75]</td>
+          </tr>
+
+          <tr>
+            <td>6</td>
+            <td>0.718750</td>
+            <td>0.750000</td>
+            <td>0.734375</td>
+            <td>0.007875</td>
+            <td>[0.734375 , 0.75]</td>
+          </tr>
+
+          <tr>
+            <td>7</td>
+            <td>0.734375</td>
+            <td>0.750000</td>
+            <td>0.742188</td>
+            <td>-0.005196</td>
+            <td>[0.734375 , 0.742188]</td>
+          </tr>
+
+          <tr>
+            <td>8</td>
+            <td>0.734375</td>
+            <td>0.742188</td>
+            <td>0.738281</td>
+            <td>0.001345</td>
+            <td>[0.738281 , 0.742188]</td>
+          </tr>
+
+          <tr>
+            <td>9</td>
+            <td>0.738281</td>
+            <td>0.742188</td>
+            <td>0.740234</td>
+            <td>-0.001924</td>
+            <td>[0.738281 , 0.740234]</td>
+          </tr>
+
+          <tr>
+            <td>10</td>
+            <td>0.738281</td>
+            <td>0.740234</td>
+            <td>0.739258</td>
+            <td>-0.000289</td>
+            <td>[0.738281 , 0.739258]</td>
+          </tr>
+
+          <tr>
+            <td>11</td>
+            <td>0.738281</td>
+            <td>0.739258</td>
+            <td>0.738770</td>
+            <td>0.000528</td>
+            <td>[0.738770 , 0.739258]</td>
+          </tr>
+
+          <tr>
+            <td>12</td>
+            <td>0.738770</td>
+            <td>0.739258</td>
+            <td>0.739014</td>
+            <td>0.000120</td>
+            <td>[0.739014 , 0.739258]</td>
+          </tr>
+
+          <tr>
+            <td>13</td>
+            <td>0.739014</td>
+            <td>0.739258</td>
+            <td>0.739136</td>
+            <td>-0.000085</td>
+            <td>[0.739014 , 0.739136]</td>
+          </tr>
+
+          <tr>
+            <td>14</td>
+            <td>0.739014</td>
+            <td>0.739136</td>
+            <td>0.739075</td>
+            <td>0.000018</td>
+            <td>[0.739075 , 0.739136]</td>
+          </tr>
+
+          <tr>
+            <td>15</td>
+            <td>0.739075</td>
+            <td>0.739136</td>
+            <td>0.739105</td>
+            <td>-0.000034</td>
+            <td>[0.739075 , 0.739105]</td>
+          </tr>
+
+          <tr>
+            <td>16</td>
+            <td>0.739075</td>
+            <td>0.739105</td>
+            <td>0.739090</td>
+            <td>-0.000008</td>
+            <td>[0.739075 , 0.739090]</td>
+          </tr>
+
+          <tr>
+            <td>17</td>
+            <td>0.739075</td>
+            <td>0.739090</td>
+            <td>0.739082</td>
+            <td>0.000005</td>
+            <td>[0.739082 , 0.739090]</td>
+          </tr>
+
+          <tr>
+            <td>18</td>
+            <td>0.739082</td>
+            <td>0.739090</td>
+            <td>0.739086</td>
+            <td>-0.000001</td>
+            <td>[0.739082 , 0.739086]</td>
+          </tr>
+
+          <tr>
+            <td>19</td>
+            <td>0.739082</td>
+            <td>0.739086</td>
+            <td>0.739084</td>
+            <td>0.000002</td>
+            <td>[0.739084 , 0.739086]</td>
+          </tr>
+
+          <tr class="highlight-row">
+            <td>20</td>
+            <td>0.739084</td>
+            <td>0.739086</td>
+            <td>0.739085</td>
+            <td>0.000000</td>
+            <td>Converged ✓</td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+    <div class="example-result">
+
+      <strong>Result:</strong>
+
+      After 20 iterations,
+      the root converges to
+
+      <br><br>
+
+      \[
+      x \approx 0.7390851
+      \]
+
+      which is the famous
+      <strong>Dottie Number</strong>.
+
+    </div>
+
+    <p>
+
+      <strong>Verification:</strong>
+
+      \[
+      \cos(0.7390851)
+      \approx
+      0.7390851
+      \]
+
+      ✓
+
+    </p>
+
+  </div>
+</div>
+<!-- CALCULATOR -->
+<section class="content-section">
+  <div class="section-inner">
+    <div class="section-tag">Calculator</div>
+    <h2>Interactive Calculator</h2>
+    <p class="calc-intro">Enter your function and interval below. The calculator will apply the Bisection Method and show all iteration steps.</p>
+
+    <div class="calc-grid">
+      <div class="calc-form-panel">
+        <div class="calc-form">
+          <div class="form-group">
+            <label for="func">Function <span class="label-hint">f(x)</span></label>
+            <input type="text" id="func" placeholder="e.g. x**3 - x - 2" value="x**3 - x - 2"/>
+            <span class="input-hint">Use: <code>x**n</code>, <code>sin(x)</code>, <code>cos(x)</code>, <code>exp(x)</code>, <code>log(x)</code>, <code>sqrt(x)</code>, <code>pi</code>, <code>e</code></span>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="a">Left endpoint <span class="label-hint">a</span></label>
+              <input type="number" id="a" step="any" value="1"/>
+            </div>
+            <div class="form-group">
+              <label for="b">Right endpoint <span class="label-hint">b</span></label>
+              <input type="number" id="b" step="any" value="2"/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="tol">Tolerance <span class="label-hint">ε</span></label>
+              <input type="number" id="tol" step="any" value="0.000001"/>
+            </div>
+            <div class="form-group">
+              <label for="max_iter">Max iterations</label>
+              <input type="number" id="max_iter" value="100"/>
+            </div>
+          </div>
+          <button class="btn-compute" onclick="computeBisection()">
+            <span>Compute Root</span>
+            <span class="btn-icon">→</span>
+          </button>
+        </div>
+
+        <div id="result-box" class="result-box hidden">
+          <div class="result-inner">
+            <div class="result-label">Root Found</div>
+            <div class="result-value" id="result-value"></div>
+            <div class="result-meta" id="result-meta"></div>
+          </div>
+        </div>
+
+        <div id="error-box" class="error-box hidden">
+          <span id="error-msg"></span>
+        </div>
+      </div>
+
+      <div class="calc-table-panel">
+        <div id="steps-panel" class="hidden">
+          <h3>Iteration Table</h3>
+          <div class="table-scroll">
+            <table class="iter-table" id="steps-table">
+              <thead>
+                <tr>
+                  <th>$n$</th><th>$a$</th><th>$b$</th><th>$c$</th>
+                  <th>$f(a)$</th><th>$f(b)$</th><th>$f(c)$</th><th>Error</th>
+                </tr>
+              </thead>
+              <tbody id="steps-body"></tbody>
+            </table>
+          </div>
+        </div>
+        <div id="steps-placeholder" class="table-placeholder">
+          <div class="placeholder-icon">∫</div>
+          <p>Iteration steps will appear here after computation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function computeBisection() {
+  const func = document.getElementById('func').value.trim();
+  const a = document.getElementById('a').value;
+  const b = document.getElementById('b').value;
+  const tol = document.getElementById('tol').value;
+  const max_iter = document.getElementById('max_iter').value;
+
+  const btn = document.querySelector('.btn-compute');
+  btn.classList.add('loading');
+  btn.querySelector('span').textContent = 'Computing...';
+
+  document.getElementById('result-box').classList.add('hidden');
+  document.getElementById('error-box').classList.add('hidden');
+  document.getElementById('steps-panel').classList.add('hidden');
+  document.getElementById('steps-placeholder').classList.remove('hidden');
+
+  try {
+    const resp = await fetch('/api/bisection', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({func, a, b, tol, max_iter})
+    });
+    const data = await resp.json();
+
+    if (data.error) {
+      document.getElementById('error-msg').textContent = data.error;
+      document.getElementById('error-box').classList.remove('hidden');
+    } else {
+      document.getElementById('result-value').textContent = data.root;
+      document.getElementById('result-meta').textContent =
+        `Converged in ${data.iterations} iteration${data.iterations !== 1 ? 's' : ''}`;
+      document.getElementById('result-box').classList.remove('hidden');
+
+      const tbody = document.getElementById('steps-body');
+      tbody.innerHTML = '';
+      data.steps.forEach(s => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${s.iteration}</td>
+          <td>${s.a}</td><td>${s.b}</td><td><strong>${s.c}</strong></td>
+          <td>${s.fa}</td><td>${s.fb}</td>
+          <td class="${Math.abs(s.fc) < 1e-4 ? 'near-zero' : ''}">${s.fc}</td>
+          <td>${s.error}</td>`;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('steps-panel').classList.remove('hidden');
+      document.getElementById('steps-placeholder').classList.add('hidden');
+    }
+  } catch(e) {
+    document.getElementById('error-msg').textContent = 'Network error. Please try again.';
+    document.getElementById('error-box').classList.remove('hidden');
+  }
+
+  btn.classList.remove('loading');
+  btn.querySelector('span').textContent = 'Compute Root';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') computeBisection();
+});
+</script>
+{% endblock %}
